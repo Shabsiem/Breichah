@@ -17,17 +17,19 @@ export default function UserInfo() {
   useEffect(()=> {
     setEmail(user.currentUser.email)
     getData()    
-  },[user.currentUser.email])
+  },[])
 
   function getData(){
-    firebase.database().ref().child('members/').get().then((snapshot)=>{
-      console.log(email)
-
-      let data = snapshot.val()
+    console.log(name)
+    firebase.database().ref().child(`members/`).child(`${name}/`).get().then((snapshot)=>{
+      let data = Object.values(snapshot.val())
       console.log(data)
-      for (var x = 0; x < data.length; x ++){
-        console.log(data[x].email)
-      }
+      let person = data.filter(people => people.email === user.currentUser.email)
+      setName(person[0].name)
+      setAddress(person[0].address)
+      setFamily(person[0].numOFam)
+      setPhone(person[0].phone)
+      setLoading(false)
     })  
   }
 
@@ -62,11 +64,12 @@ export default function UserInfo() {
       address: address,
       numOFam: family,
       paid: false,
-      datesReserved:[]
+      datesReserved:[],
+      admin: false
     })
     history.push('/dashboard')
   }
-  return( loading ? null : 
+  return( loading ? <div>Loading</div> : 
     <Form onSubmit={handleSubmit}>
       <Form.Row>
         <Form.Group as={Col} controlId="formGridName">
@@ -109,7 +112,7 @@ export default function UserInfo() {
       </Form.Row>
 
       <Button variant="primary" type="submit">
-        Submit
+        {user.currentUser.email? 'Update' : 'Submit'}
       </Button>
     </Form>
   )

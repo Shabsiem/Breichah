@@ -64,7 +64,7 @@ function App() {
     <Container>
       <div>         
             <Row>
-              <Col xs={2} id='sidebar-wrapper'>
+              <Col lg={2} id='sidebar-wrapper' style={{width: '15%'}}>
                 <Navigation
                   logout = {handleLogout}/>              
               </Col>
